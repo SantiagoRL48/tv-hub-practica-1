@@ -1,3 +1,27 @@
+## Práctica Integradora 3 · Despliegue en la nube (Render + MongoDB Atlas + GitHub Actions)
+
+Rama de producción: `practica-integradora-3`.
+
+| Plataforma | Responsabilidad |
+| --- | --- |
+| GitHub | Código fuente; cada push a `practica-integradora-3` dispara el workflow. |
+| GitHub Actions (`.github/workflows/ci-cd.yml`) | Job `ci`: `npm ci`, `npm test`, `npm run build`. Job `deploy` (`needs: ci`): llama al Deploy Hook de Render con `ref=<sha>` solo si CI pasó. |
+| Render (Web Service) | Build: `npm ci --include=dev && npm run build` · Start: `npm start` · Health check: `/ready` · Auto-Deploy: **Off** (el despliegue lo pide el workflow). |
+| MongoDB Atlas | Base `tvhub` con los canales, usuarios, sesiones y favoritos. |
+
+Variables de entorno en Render (los valores nunca se versionan): `NODE_ENV=production`, `MONGO_URI`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`. `PORT` lo asigna Render.
+
+Secret del repositorio en GitHub: `RENDER_DEPLOY_HOOK_URL`.
+
+Carga de canales en Atlas (una sola vez, desde la máquina local):
+
+```bash
+npm run build
+MONGO_URI="<cadena de conexión de Atlas>" NODE_ENV=production npm run import:all-channels
+```
+
+---
+
 # TV Hub V4, Student Starter, Práctica Integradora 1
 
 Proyecto de clase con Node.js, Express, TypeScript, MongoDB y Mongoose. Esta es la base estudiantil de TV Hub V4 para completar el flujo MVC de Watch sin cambiar la arquitectura existente.
