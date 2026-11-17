@@ -17,7 +17,7 @@ Carga de canales en Atlas (una sola vez, desde la máquina local):
 
 ```bash
 npm run build
-MONGO_URI="<cadena de conexión de Atlas>" NODE_ENV=production npm run import:all-channels
+MONGO_URI="<cadena de conexión de Atlas>" npm run import:all-channels
 ```
 
 ---
